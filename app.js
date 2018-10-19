@@ -21,6 +21,10 @@ exports.getBaseGrades = function(username, password, schoolid, callback) {
         },
         function(err, httpResponse, body) {
 
+            if (err) { throw err; }
+
+            if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
+
             request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx', function(error, response, body) {
                 let $ = cheerio.load(body);
 
