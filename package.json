@@ -1,6 +1,6 @@
 {
   "name": "gradespeed-api-dodea",
-  "version": "1.0.1",
+  "version": "1.0.7",
   "description": "",
   "main": "app.js",
   "dependencies": {
