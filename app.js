@@ -137,8 +137,6 @@ exports.getAllIDs = function(username, password, schoolid, callback) {
                     grades.push(classData);
                 });
 
-                console.log(grades[0][4])
-
                 callback(grades);
             });
         }
