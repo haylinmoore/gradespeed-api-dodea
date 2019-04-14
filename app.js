@@ -3,143 +3,143 @@ const cheerio = require('cheerio')
 
 exports.getBaseGrades = function(username, password, schoolid, callback) {
 
-	// Testing
-	let request = requests.defaults({ jar: true })
-	let formData = {
-		'AuthType': 'Student',
-		'FormType': 'Login',
-		'DistrictID': '3000010',
-		'SchoolID': schoolid,
-		'Username': username,
-		'Password': password,
-		'cmdLogOn': 'Sign+In'
-	};
+    // Testing
+    let request = requests.defaults({ jar: true })
+    let formData = {
+        'AuthType': 'Student',
+        'FormType': 'Login',
+        'DistrictID': '3000010',
+        'SchoolID': schoolid,
+        'Username': username,
+        'Password': password,
+        'cmdLogOn': 'Sign+In'
+    };
 
-	request.post({
-			url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
-			form: formData
-		},
-		function(err, httpResponse, body) {
+    request.post({
+            url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
+            form: formData
+        },
+        function(err, httpResponse, body) {
 
-			if (err) { throw err; }
+            if (err) { throw err; }
 
-			if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
+            if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
 
-			request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx', function(error, response, body) {
-				let $ = cheerio.load(body);
+            request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx', function(error, response, body) {
+                let $ = cheerio.load(body);
 
-				let grades = [];
-				
-				$(".DataTable").last().find(".DataRow, .DataRowAlt").each(function() {
-					let classData = [];
-					$(this).find("th, td").each(function() {
-						classData.push($(this).text())
-					});
-					grades.push(classData);
-				});
+                let grades = []
 
-				callback(grades);
-			});
-		}
-	);
+                $(".DataRow, .DataRowAlt").each(function() {
+                    let classData = [];
+                    $(this).find("th, td").each(function() {
+                        classData.push($(this).text())
+                    });
+                    grades.push(classData);
+                });
+
+                callback(grades);
+            });
+        }
+    );
 
 }
 
 exports.getGradesByID = function(username, password, schoolid, id, callback) {
 
-	let request = requests.defaults({ jar: true })
-	let formData = {
-		'AuthType': 'Student',
-		'FormType': 'Login',
-		'DistrictID': '3000010',
-		'SchoolID': schoolid,
-		'Username': username,
-		'Password': password,
-		'cmdLogOn': 'Sign+In'
-	};
+    let request = requests.defaults({ jar: true })
+    let formData = {
+        'AuthType': 'Student',
+        'FormType': 'Login',
+        'DistrictID': '3000010',
+        'SchoolID': schoolid,
+        'Username': username,
+        'Password': password,
+        'cmdLogOn': 'Sign+In'
+    };
 
-	request.post({
-			url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
-			form: formData
-		},
-		function(err, httpResponse, body) {
+    request.post({
+            url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
+            form: formData
+        },
+        function(err, httpResponse, body) {
 
-			if (err) { throw err; }
+            if (err) { throw err; }
 
-			if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
+            if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
 
-			request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx?data=' + id, function(error, response, body) {
-				let $ = cheerio.load(body);
+            request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx?data=' + id, function(error, response, body) {
+                let $ = cheerio.load(body);
 
-				let grades = []
+                let grades = []
 
-				$('.ClassName').nextAll('.DataTable').each(function() {
-					var id = grades.length;
-					grades[id] = [];
+                $('.ClassName').nextAll('.DataTable').each(function() {
+                    var id = grades.length;
+                    grades[id] = [];
 
-					grades[id].push([$(this).prev().prev().text()]);
+                    grades[id].push([$(this).prev().prev().text()]);
 
-					$(this).find("tr").each(function() {
-						var iId = grades[id].length;
-						grades[id][iId] = []
-						$(this).find("td").each(function() {
-							grades[id][iId].push($(this).text())
-						});
-					});
-				});
+                    $(this).find("tr").each(function() {
+                        var iId = grades[id].length;
+                        grades[id][iId] = []
+                        $(this).find("td").each(function() {
+                            grades[id][iId].push($(this).text())
+                        });
+                    });
+                });
 
-				callback(grades);
-			});
-		}
-	);
+                callback(grades);
+            });
+        }
+    );
 }
 
 exports.getAllIDs = function(username, password, schoolid, callback) {
 
 
-	let request = requests.defaults({ jar: true })
-	let formData = {
-		'AuthType': 'Student',
-		'FormType': 'Login',
-		'DistrictID': '3000010',
-		'SchoolID': schoolid,
-		'Username': username,
-		'Password': password,
-		'cmdLogOn': 'Sign+In'
-	};
+    let request = requests.defaults({ jar: true })
+    let formData = {
+        'AuthType': 'Student',
+        'FormType': 'Login',
+        'DistrictID': '3000010',
+        'SchoolID': schoolid,
+        'Username': username,
+        'Password': password,
+        'cmdLogOn': 'Sign+In'
+    };
 
-	request.post({
-			url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
-			form: formData
-		},
-		function(err, httpResponse, body) {
+    request.post({
+            url: 'https://dodea.gradespeed.net/pc/StudentLogin.aspx',
+            form: formData
+        },
+        function(err, httpResponse, body) {
 
-			if (err) { throw err; }
+            if (err) { throw err; }
 
-			if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
+            if (httpResponse.statusCode === 200) { callback(["Error, Username/Password/SchoolID incorrect"]); return; }
 
-			request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx', function(error, response, body) {
-				let $ = cheerio.load(body);
+            request('https://dodea.gradespeed.net/pc/ParentStudentGrades.aspx', function(error, response, body) {
+                let $ = cheerio.load(body);
 
-				let grades = []
+                let grades = []
 
-				$(".DataRow, .DataRowAlt").each(function() {
-					let classData = [];
-					$(this).find("th, td").each(function() {
-						var url = $(this).find("a.Grade").attr('href');
-						if (url != undefined) {
-							classData.push([url, $(this).text()]);
-						}
-						else {
-							classData.push([$(this).text()]);
-						}
-					});
-					grades.push(classData);
-				});
+                $(".DataRow, .DataRowAlt").each(function() {
+                    let classData = [];
+                    $(this).find("th, td").each(function() {
+                        var url = $(this).find("a.Grade").attr('href');
+                        if (url != undefined) {
+                            classData.push([url, $(this).text()]);
+                        }
+                        else {
+                            classData.push([$(this).text()]);
+                        }
+                    });
+                    grades.push(classData);
+                });
 
-				callback(grades);
-			});
-		}
-	);
+                callback(grades);
+            });
+        }
+    );
 
 }
